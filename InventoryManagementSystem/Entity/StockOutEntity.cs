@@ -12,5 +12,15 @@ namespace InventoryManagementSystem.Entity
         public decimal TotalPrice { get; set; }
         public DateTime DateOut { get; set; }
         public string Notes { get; set; }
+
+        /// <summary>
+        /// Display-only; populated by a join in StockOutDAL.GetAll(). Not a database column.
+        /// </summary>
+        public string ProductName { get; set; }
+
+        /// <summary>
+        /// Display-only; populated by a join in StockOutDAL.GetAll(). Not a database column.
+        /// </summary>
+        public string CustomerName { get; set; }
     }
 }

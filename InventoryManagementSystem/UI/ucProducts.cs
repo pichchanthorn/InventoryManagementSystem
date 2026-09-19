@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using InventoryManagementSystem.BLL;
@@ -6,23 +6,30 @@ using InventoryManagementSystem.Entity;
 
 namespace InventoryManagementSystem.UI
 {
-    public partial class frmProducts : Form
+    public partial class ucProducts : UserControl
     {
         private readonly ProductBLL _productBLL = new ProductBLL();
         private readonly CategoryBLL _categoryBLL = new CategoryBLL();
         private int _selectedProductId;
         private bool _suppressSelectionChanged;
 
-        public frmProducts()
+        public ucProducts()
         {
+            Font = Theme.BaseFont;
             InitializeComponent();
+            Theme.Apply(this);
+            Theme.AttachEmptyState(dgvProducts, "No products found.");
         }
 
-        private void frmProducts_Load(object sender, EventArgs e)
+        private void ucProducts_Load(object sender, EventArgs e)
         {
             LoadCategories();
             LoadProducts();
             ClearForm();
+
+            // A freshly bound DataGridView re-selects its first row once the page is first laid out (after Load),
+            // which would silently put the first product into edit mode. Reset once more after that has happened.
+            BeginInvoke(new Action(ClearForm));
         }
 
         private void LoadCategories()
@@ -71,13 +78,24 @@ namespace InventoryManagementSystem.UI
             cmbCategory.SelectedValue = product.CategoryID;
             txtUnitPrice.Text = product.UnitPrice.ToString("0.##");
             txtInitialStock.Text = product.QtyInStock.ToString();
-            txtInitialStock.ReadOnly = true;
+            SetEditMode(true);
             txtBarcode.Text = product.Barcode;
             txtReorderLevel.Text = product.ReorderLevel.ToString();
             txtDescription.Text = product.Description;
+        }
 
-            btnUpdate.Enabled = true;
-            btnDelete.Enabled = true;
+        /// <summary>
+        /// Add mode: "Initial Stock" is typed in and only used for the new row. Edit mode: the same box shows
+        /// the product's "Current Stock" read-only (ProductDAL.Update never writes QtyInStock; stock only moves
+        /// through Stock In / Stock Out / Orders).
+        /// </summary>
+        private void SetEditMode(bool editing)
+        {
+            lblInitialStock.Text = editing ? "Current Stock:" : "Initial Stock:";
+            txtInitialStock.ReadOnly = editing;
+            btnAdd.Enabled = !editing;
+            btnUpdate.Enabled = editing;
+            btnDelete.Enabled = editing;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -207,18 +225,15 @@ namespace InventoryManagementSystem.UI
             {
                 _selectedProductId = 0;
                 txtProductName.Clear();
-                if (cmbCategory.Items.Count > 0)
-                    cmbCategory.SelectedIndex = 0;
-                txtUnitPrice.Text = "0";
-                txtInitialStock.ReadOnly = false;
+                cmbCategory.SelectedIndex = -1;
+                txtUnitPrice.Clear();
+                SetEditMode(false);
                 txtInitialStock.Text = "0";
                 txtBarcode.Clear();
                 txtReorderLevel.Text = "0";
                 txtDescription.Clear();
                 dgvProducts.ClearSelection();
                 dgvProducts.CurrentCell = null;
-                btnUpdate.Enabled = false;
-                btnDelete.Enabled = false;
             }
             finally
             {

@@ -1,6 +1,6 @@
 namespace InventoryManagementSystem.UI
 {
-    partial class frmCategories
+    partial class ucCategories
     {
         /// <summary>
         /// Required designer variable.
@@ -165,18 +165,17 @@ namespace InventoryManagementSystem.UI
             this.dgvCategories.TabIndex = 1;
             this.dgvCategories.SelectionChanged += new System.EventHandler(this.dgvCategories_SelectionChanged);
             //
-            // frmCategories
+            // ucCategories
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(760, 450);
+            this.Size = new System.Drawing.Size(760, 450);
             this.Controls.Add(this.dgvCategories);
             this.Controls.Add(this.pnlForm);
-            this.MinimumSize = new System.Drawing.Size(650, 400);
-            this.Name = "frmCategories";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Categories";
-            this.Load += new System.EventHandler(this.frmCategories_Load);
+            this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(650, 400);
+            this.Name = "ucCategories";
+            this.Load += new System.EventHandler(this.ucCategories_Load);
             this.pnlForm.ResumeLayout(false);
             this.pnlForm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCategories)).EndInit();

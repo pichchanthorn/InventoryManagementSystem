@@ -8,5 +8,10 @@ namespace InventoryManagementSystem.Entity
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal Total { get; set; }
+
+        /// <summary>
+        /// Display-only; populated by a join in OrderDAL. Not a database column.
+        /// </summary>
+        public string ProductName { get; set; }
     }
 }

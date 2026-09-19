@@ -59,35 +59,81 @@
     <Compile Include="UI\frmMain.Designer.cs">
       <DependentUpon>UI\frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\frmCategories.cs">
+    <Compile Include="UI\ucCategories.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ucCategories.Designer.cs">
+      <DependentUpon>UI\ucCategories.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucProducts.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ucProducts.Designer.cs">
+      <DependentUpon>UI\ucProducts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucCustomers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ucCustomers.Designer.cs">
+      <DependentUpon>UI\ucCustomers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucSuppliers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ucSuppliers.Designer.cs">
+      <DependentUpon>UI\ucSuppliers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucEmployees.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ucEmployees.Designer.cs">
+      <DependentUpon>UI\ucEmployees.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucStockIn.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ucStockIn.Designer.cs">
+      <DependentUpon>UI\ucStockIn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucStockOut.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ucStockOut.Designer.cs">
+      <DependentUpon>UI\ucStockOut.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ucOrders.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ucOrders.Designer.cs">
+      <DependentUpon>UI\ucOrders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\frmOrderDetails.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\frmCategories.Designer.cs">
-      <DependentUpon>UI\frmCategories.cs</DependentUpon>
+    <Compile Include="UI\frmOrderDetails.Designer.cs">
+      <DependentUpon>UI\frmOrderDetails.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\frmProducts.cs">
+    <Compile Include="UI\frmReportPreview.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\frmProducts.Designer.cs">
-      <DependentUpon>UI\frmProducts.cs</DependentUpon>
+    <Compile Include="UI\frmReportPreview.Designer.cs">
+      <DependentUpon>UI\frmReportPreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\frmCustomers.cs">
-      <SubType>Form</SubType>
+    <Compile Include="UI\Reporting\ReportDocument.cs" />
+    <Compile Include="UI\Reporting\ReportDocumentBuilder.cs" />
+    <Compile Include="UI\Reporting\ReportPrinter.cs" />
+    <Compile Include="UI\Theme.cs" />
+    <Compile Include="UI\ucDashboard.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\frmCustomers.Designer.cs">
-      <DependentUpon>UI\frmCustomers.cs</DependentUpon>
+    <Compile Include="UI\ucDashboard.Designer.cs">
+      <DependentUpon>UI\ucDashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\frmSuppliers.cs">
-      <SubType>Form</SubType>
+    <Compile Include="UI\ucReports.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\frmSuppliers.Designer.cs">
-      <DependentUpon>UI\frmSuppliers.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\frmEmployees.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\frmEmployees.Designer.cs">
-      <DependentUpon>UI\frmEmployees.cs</DependentUpon>
+    <Compile Include="UI\ucReports.Designer.cs">
+      <DependentUpon>UI\ucReports.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -127,6 +173,8 @@
     <Compile Include="Entity\StockOutEntity.cs" />
     <Compile Include="Entity\OrderEntity.cs" />
     <Compile Include="Entity\OrderDetailEntity.cs" />
+    <Compile Include="Entity\ReportEntities.cs" />
+    <Compile Include="Entity\DashboardEntities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\DbConnection.cs" />
@@ -136,6 +184,11 @@
     <Compile Include="DAL\CustomerDAL.cs" />
     <Compile Include="DAL\SupplierDAL.cs" />
     <Compile Include="DAL\EmployeeDAL.cs" />
+    <Compile Include="DAL\StockInDAL.cs" />
+    <Compile Include="DAL\StockOutDAL.cs" />
+    <Compile Include="DAL\OrderDAL.cs" />
+    <Compile Include="DAL\ReportDAL.cs" />
+    <Compile Include="DAL\DashboardDAL.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\PasswordHasher.cs" />
@@ -151,6 +204,15 @@
     <Compile Include="BLL\SupplierBLL.cs" />
     <Compile Include="BLL\EmployeeResult.cs" />
     <Compile Include="BLL\EmployeeBLL.cs" />
+    <Compile Include="BLL\StockInResult.cs" />
+    <Compile Include="BLL\StockInBLL.cs" />
+    <Compile Include="BLL\StockOutResult.cs" />
+    <Compile Include="BLL\StockOutBLL.cs" />
+    <Compile Include="BLL\OrderResult.cs" />
+    <Compile Include="BLL\OrderBLL.cs" />
+    <Compile Include="BLL\ReportResult.cs" />
+    <Compile Include="BLL\ReportBLL.cs" />
+    <Compile Include="BLL\DashboardBLL.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Database\InventoryManagementDB.sql" />

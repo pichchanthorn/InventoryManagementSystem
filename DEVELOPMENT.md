@@ -1,4 +1,4 @@
-# InventoryManagementSystem — Development Notes
+﻿# InventoryManagementSystem — Development Notes
 
 ## Project Purpose
 
@@ -29,19 +29,23 @@ UI  →  BLL  →  DAL  →  SQL Server
   talks only to `CategoryBLL`; `frmProducts` talks only to `ProductBLL` (and
   `CategoryBLL`, to populate the Category dropdown); `frmCustomers` talks only
   to `CustomerBLL`; `frmSuppliers` talks only to `SupplierBLL`; `frmEmployees`
-  talks only to `EmployeeBLL`.
+  talks only to `EmployeeBLL`; `frmStockIn` talks only to `StockInBLL` (and
+  `ProductBLL`/`SupplierBLL`, to populate the Product/Supplier dropdowns and
+  filters).
 - **BLL** — Business logic layer. Owns business rules, validation, and
   authentication (`UserBLL`, `PasswordHasher`, `LoginResult`, `CategoryBLL`,
   `CategoryResult`, `ProductBLL`, `ProductResult`, `CustomerBLL`,
   `CustomerResult`, `SupplierBLL`, `SupplierResult`, `EmployeeBLL`,
-  `EmployeeResult`).
+  `EmployeeResult`, `StockInBLL`, `StockInResult`).
 - **DAL** — Data access layer. Owns all database access (`DbConnection`,
   `UserDAL`, `CategoryDAL`, `ProductDAL`, `CustomerDAL`, `SupplierDAL`,
-  `EmployeeDAL`). All SQL is parameterized.
+  `EmployeeDAL`, `StockInDAL`). All SQL is parameterized.
 - **Entity** — Plain model classes shared across layers. No business or database
   logic. `ProductEntity` carries one display-only, non-persisted property
   (`CategoryName`) populated by `ProductDAL`'s join — it is not a database
-  column and is never written by Insert/Update.
+  column and is never written by Insert/Update. `StockInEntity` similarly
+  carries two display-only, non-persisted properties (`ProductName`,
+  `SupplierName`) populated by `StockInDAL`'s join.
 
 ## Folder Structure
 
@@ -78,18 +82,30 @@ InventoryManagementSystem/
     EmployeeBLL.cs    Employee validation (required name, optional
                        gender/phone/email/address with length limits and
                        NULL normalization)
+    StockInResult.cs  Stock In operation outcome type (success/message)
+    StockInBLL.cs     Stock In validation (required product, optional
+                       supplier, quantity > 0, unit cost >= 0, notes length),
+                       existence checks for product/supplier, Total Cost
+                       calculation (Quantity × Unit Cost, rounded to 2
+                       decimals)
   UI/
     frmLogin.cs / .Designer.cs      Login form (startup form)
     frmMain.cs  / .Designer.cs      Post-login shell: header, left navigation
                                      (Categories, Products, Customers,
-                                     Suppliers, and Employees functional; 5
-                                     other items still placeholders), content
-                                     area, logout
+                                     Suppliers, Employees, and Stock In
+                                     functional; 4 other items still
+                                     placeholders), content area, logout
     frmCategories.cs / .Designer.cs Category list/add/edit/delete window
     frmProducts.cs   / .Designer.cs Product list/add/edit/delete window
     frmCustomers.cs  / .Designer.cs Customer list/add/edit/delete window
     frmSuppliers.cs  / .Designer.cs Supplier list/add/edit/delete window
     frmEmployees.cs  / .Designer.cs Employee list/add/edit/delete window
+    frmStockIn.cs    / .Designer.cs Stock In entry form (Product required,
+                                     Supplier optional, Quantity, Unit Cost,
+                                     read-only Total Cost preview, Notes) plus
+                                     a Stock In history grid with search,
+                                     refresh, and Product/Supplier/date-range
+                                     filters
   Database/
     InventoryManagementDB.sql   Full schema script (idempotent)
   Program.cs          Application entry point (frmLogin → frmMain flow)
@@ -109,6 +125,10 @@ InventoryManagementSystem/
   does not touch any other table. `Gender` is treated as plain optional text
   within the existing `NVARCHAR(20)` column — no fixed enum/lookup was
   introduced, since none exists in the current schema or application.
+  Phase 5A also made no schema changes — the existing `StockIn` table
+  (`StockInID`, `ProductID`, `SupplierID`, `Quantity`, `UnitCost`,
+  `TotalCost`, `DateIn`, `Notes`) and `Products.QtyInStock` were already
+  sufficient; both were used exactly as defined in `Database/InventoryManagementDB.sql`.
 - The pre-existing `InventoryAppDB` database was not touched, modified, or
   written to (confirmed unchanged `create_date` before/after every phase).
 
@@ -138,9 +158,10 @@ deleted as part of the same test runs.
 
 ## Current Phase
 
-**Phase 4C — Employee CRUD — COMPLETE**
+**Phase 5A — Stock In — COMPLETE**
 
 Prior completed phases:
+- **Phase 4C — Employee CRUD — COMPLETE**
 - **Phase 4B — Supplier CRUD — COMPLETE**
 - **Phase 4A — Customer CRUD — COMPLETE**
 - **Phase 3B — Product CRUD — COMPLETE**
@@ -259,13 +280,99 @@ Phase 4C (Employee CRUD):
   unchanged Phase 2B placeholders/welcome panel. Categories', Products',
   Customers', and Suppliers' navigation behavior was not modified.
 
+Phase 5A (Stock In):
+
+- Pre-existing build-breaking defect fixed first (required before any build
+  or test could run, unrelated to the Stock In feature itself): `frmLogin.cs`
+  and `frmMain.cs` each contained a stray, incomplete duplicate
+  `InitializeComponent()` method alongside the real one already generated in
+  their `.Designer.cs` partial file, causing `CS0111` and blocking
+  compilation entirely. The stray duplicate stub was deleted from both
+  `frmLogin.cs` and `frmMain.cs`; the real, complete `InitializeComponent()`
+  in each `.Designer.cs` file was not touched. This is a pure duplicate-code
+  deletion with no behavior change — confirmed by full regression testing
+  below.
+- `DAL/StockInDAL.cs`:
+  - `GetAll(productId, supplierId, dateFrom, dateToExclusive, searchText)` —
+    joined with `Products` (inner) and `Suppliers` (left, since Supplier is
+    optional) for display; all filters are optional and parameterized;
+    ordered by `DateIn` descending.
+  - `InsertWithStockUpdate(StockInEntity)` — inserts the `StockIn` row and
+    increases `Products.QtyInStock` by the same quantity inside a single
+    `SqlTransaction`; either both changes commit or neither does (any
+    exception triggers `transaction.Rollback()` before rethrowing).
+    `DateIn` is set by `SYSDATETIME()` in the SQL itself (database/server
+    controlled, never supplied by the caller). All parameters are
+    strongly-typed `SqlParameter`s; no string concatenation of user input
+    into SQL.
+- `BLL/StockInBLL.cs`:
+  - `GetAll(...)` — thin pass-through to `StockInDAL.GetAll`, converting an
+    inclusive `dateTo` into the exclusive upper bound the DAL expects, and
+    wrapping database failures in a friendly `ApplicationException` (same
+    pattern as `ProductBLL.GetAll`).
+  - `Add(StockInEntity)` — business rules: Product selection required
+    (`ProductID > 0`); Supplier optional (`SupplierID <= 0` or `null` is
+    normalized to `NULL`); Quantity required and must be `> 0`; Unit Cost
+    must be `>= 0`; Notes optional, trimmed, capped at 255 characters
+    (`NVARCHAR(255)`); Product existence is verified via `ProductDAL.GetById`
+    before insert; Supplier existence (if selected) is verified via
+    `SupplierDAL.GetById` before insert; **Total Cost is calculated here**
+    as `Math.Round(Quantity * UnitCost, 2, MidpointRounding.AwayFromZero)` —
+    never accepted from the caller/UI. A `547` (foreign-key violation) from
+    the database is translated to a friendly message for the rare race where
+    the product/supplier is deleted between validation and insert; all other
+    database failures are caught and translated into a generic friendly
+    message — no raw SQL exception text or connection string is ever shown
+    to the user.
+  - Since the schema's `CK_Products_QtyInStock` check constraint already
+    guarantees `QtyInStock >= 0`, and Stock In only ever adds a positive
+    quantity, no additional application-level negative-stock guard was
+    needed — increasing a non-negative value by a positive one cannot go
+    negative.
+- `UI/frmStockIn.cs` / `.Designer.cs`:
+  - Entry section: Product dropdown (required, populated from
+    `ProductBLL.GetAll()`), Supplier dropdown (optional, with a
+    `"(No Supplier)"` sentinel item populated from `SupplierBLL.GetAll()`),
+    Quantity, Unit Cost, a read-only Total Cost **preview** field (recomputed
+    client-side on every keystroke purely for user feedback — the value
+    actually persisted is always recalculated authoritatively by
+    `StockInBLL.Add`, so a stale/mismatched preview can never reach the
+    database), Notes (optional, multiline, `MaxLength = 255`), "Record Stock
+    In" and "Clear" buttons. There is no Update/Delete for Stock In records —
+    Stock In is treated as an append-only movement ledger, consistent with
+    the schema (no schema change) and with the fact that this phase's
+    requirements only asked for recording stock in, not editing/reversing it.
+  - History section: a `DataGridView` (`StockInID`, Product, Supplier,
+    Quantity, Unit Cost, Total Cost, Date In, Notes) with a filter bar above
+    it — Product filter dropdown (`"(All Products)"` default), Supplier
+    filter dropdown (`"(All Suppliers)"` default), a "Filter by date"
+    checkbox that enables/disables a From/To `DateTimePicker` range, a free-text
+    Search box (matches Product Name or Notes via a parameterized `LIKE`),
+    a **Search** button (applies the current filter/search state), and a
+    **Refresh** button (clears all filters/search and reloads the full
+    unfiltered history).
+  - `frmMain` — the "Stock In" navigation item now opens `frmStockIn`
+    (reusing the existing instance and bringing it to front on repeated
+    clicks, identical pattern to the other modules). No other navigation
+    item's behavior was changed. The "Stock Out", "Orders", and "Reports"
+    navigation items are unchanged Phase 2B placeholders.
+  - `frmStockIn.cs` contains no `SqlConnection`, `SqlCommand`, or SQL of any
+    kind.
+  - Product Management (`frmProducts`) was not modified in this phase;
+    `ProductDAL.Update`'s exclusion of `QtyInStock` (established in Phase
+    3B) already prevents manual editing of stock quantity from that form, so
+    no additional change was needed there to satisfy "do not allow manual
+    `QtyInStock` edits from Product Management."
+
 ## What Has NOT Been Implemented
 
-- Stock In / Stock Out workflows
+- Stock Out workflow
 - Orders / order details workflow
 - Reports
 - A real Dashboard (statistics, charts, computed business data)
 - Per-module authorization / permission management
+- Editing or deleting a recorded Stock In transaction (by design — see
+  Phase 5A notes above)
 
 ## Verification Performed
 
@@ -347,6 +454,162 @@ run).
    written to during this phase.
 9. Confirmed no schema changes were made (no new tables/columns/indexes).
 
+### Phase 5A
+
+1. Fixed a pre-existing build-breaking defect found during initial
+   inspection (unrelated to Stock In): before any Phase 5A code was written,
+   `MSBuild /t:Rebuild` failed with `CS0111` ("already defines a member
+   called 'InitializeComponent'") on both `frmLogin` and `frmMain`, because
+   each had a stray duplicate `InitializeComponent()` stub in its `.cs` file
+   in addition to the real one in its `.Designer.cs` file. The project had
+   never successfully compiled with `MSBuild` in this state. The duplicate
+   stubs were deleted (no other change to either file); `MSBuild /t:Rebuild`
+   then succeeded with 0 errors, 0 warnings, confirming this was a pure
+   duplicate-declaration issue with no behavioral effect.
+2. `MSBuild /t:Rebuild` after implementing Phase 5A — **Build succeeded, 0
+   warnings, 0 errors.**
+3. Direct `StockInBLL`/`StockInDAL`/`ProductDAL` test (standalone console
+   harness referencing the built assembly, compiled with `csc.exe`, run once
+   against the live `InventoryManagementDB`, then deleted — not part of the
+   shipped project) using the pre-existing test fixtures already in the
+   database (`ProductID=1` "NPK 15-15-15", baseline `QtyInStock=100`;
+   `SupplierID=1` "Test Supplier"). All 23 checks passed on the first run:
+   - Valid Stock In with a Supplier selected succeeds, persists a `StockIn`
+     row with the correct `SupplierID`, and increases `Products.QtyInStock`
+     by exactly the quantity recorded.
+   - `Quantity = 0` is rejected ("Quantity must be greater than zero.").
+   - Negative `Quantity` (`-5`) is rejected with the same message.
+   - Negative `UnitCost` (`-1`) is rejected ("Unit cost cannot be
+     negative.").
+   - No product selected (`ProductID = 0`) is rejected ("Please select a
+     product.").
+   - A non-existent `ProductID` is rejected ("Selected product does not
+     exist.").
+   - A non-existent `SupplierID` is rejected ("Selected supplier does not
+     exist.").
+   - Stock In with `SupplierID = NULL` (Supplier omitted) succeeds and
+     persists with `SupplierID` correctly `NULL`, confirming Supplier is
+     genuinely optional.
+   - Total Cost is calculated correctly, including a rounding case
+     (`Quantity=7, UnitCost=3.335` → `TotalCost=23.35`, i.e.
+     `Math.Round(23.345, 2, AwayFromZero)`), confirming the calculation is
+     owned by the BLL and not just `Quantity * UnitCost` done elsewhere.
+   - Notes over 255 characters is rejected ("Notes cannot exceed 255
+     characters.").
+   - `Products.QtyInStock` was independently re-read before/after each
+     successful Stock In and increased by exactly the recorded quantity
+     each time (10, then 7, then 7 — cumulative 100 → 124 before cleanup).
+   - Transaction rollback (verified where practical, calling
+     `StockInDAL.InsertWithStockUpdate` directly with a non-existent
+     `ProductID` to force a foreign-key violation on the `INSERT INTO
+     StockIn` statement): the call throws, no `StockIn` row was persisted,
+     and `Products.QtyInStock` was confirmed unchanged afterward — the
+     failed first statement did not leave a partial update. (The reverse
+     ordering — insert succeeds but the subsequent `UPDATE Products` fails —
+     was not independently reproduced; see Known Testing Limitations.)
+   - Regression: `CategoryBLL`, `ProductBLL`, `CustomerBLL`, `SupplierBLL`,
+     and `EmployeeBLL` `GetAll()` all still return data with no exceptions;
+     `UserBLL.Login` is still callable and still rejects invalid credentials.
+   - All harness-created `StockIn` rows (tagged `ZZ-HARNESS-*` in `Notes`)
+     were deleted at the end of the run and `Products.QtyInStock` for
+     `ProductID=1` was decremented back by the same total (24), restoring
+     the exact pre-test baseline (`QtyInStock=100`, 0 `StockIn` rows) —
+     confirmed by direct query.
+4. Verified by search: no `SqlConnection`, `SqlCommand`, or SQL keywords
+   exist anywhere in `frmStockIn.cs` or the modified parts of `frmMain.cs`.
+5. Verified by code inspection: `StockInDAL.GetAll` and
+   `StockInDAL.InsertWithStockUpdate` use only parameterized
+   `SqlCommand`/`SqlParameter`; no user input (including the search text) is
+   concatenated into SQL text — the `LIKE` wildcard is applied to the
+   parameter's *value*, not the SQL string.
+6. Verified by code inspection: `InsertWithStockUpdate` performs the
+   `StockIn` insert and the `Products.QtyInStock` update on the same
+   `SqlConnection`/`SqlTransaction`, with `transaction.Commit()` only after
+   both `ExecuteNonQuery()` calls succeed and an explicit `transaction.Rollback()`
+   in a `catch` block that rethrows — satisfying "one transaction, no partial
+   updates."
+7. Verified by direct query: after all testing and cleanup, `StockIn` has 0
+   rows, `Categories`/`Products`/`Customers`/`Suppliers`/`Employees` each
+   still have exactly 1 row (the pre-existing test fixtures, unchanged), and
+   `Users` still has exactly the two development accounts, unchanged.
+8. Verified `InventoryAppDB`'s `create_date` is unchanged — it was not
+   written to during this phase.
+9. Confirmed no schema changes were made (no new tables/columns/indexes);
+   `Database/InventoryManagementDB.sql` was not modified.
+10. Confirmed via `git status` that no commit, stage, or other Git history
+    operation was performed — all changes remain unstaged/untracked on the
+    pre-existing `feature/phase-5a-stock-in` branch, as instructed.
+
+## Phase 7B.1 — Report Preview & Printing
+
+The Reports module (`ucReports`) keeps its four reports (Inventory / Stock, Stock In, Stock Out, Orders), filters and
+grid. A **Preview / Print** button (enabled once a report has loaded) opens a Report Viewer-style preview.
+
+- **Technology:** native WinForms only (`PrintDocument`, `PrintPreviewControl`, `PrintDialog`). No ReportViewer, no RDLC,
+  no NuGet packages, no database or BLL/DAL changes.
+- **`UI/Reporting/ReportDocument.cs`** - presentation model (title, generated time, filter text, columns, formatted rows,
+  summary lines, portrait/landscape). Separate from database entities.
+- **`UI/Reporting/ReportDocumentBuilder.cs`** - maps the existing `ReportBLL` results to a `ReportDocument`; totals and
+  counts come from the BLL result, so the printout always matches the grid. The on-screen summary bar uses the same lines.
+- **`UI/Reporting/ReportPrinter.cs`** - `PrintDocument` that draws header, repeated table header, rows, summary (last page)
+  and footer "Page X of N". Pagination is deterministic (fixed row height; depends only on page size and row count);
+  long text is clipped with an ellipsis. Inventory prints portrait; Stock In / Stock Out / Orders print landscape.
+- **`UI/frmReportPreview.cs`** - toolbar (Print, Previous, "Page X of N", Next, Zoom, Close) over a `PrintPreviewControl`.
+  Preview and printing use the same `ReportPrinter` instance. Printing goes through the normal Windows print dialog;
+  nothing is sent to a printer without the user confirming it there.
+- **Not implemented (deferred):** PDF / Excel / CSV export.
+- **Tests:** regression group N (`Tests.ReportPreview.cs`) - pagination rules, all four reports with 0 / 1 / many rows and
+  filters, PrintPage generation via `PreviewPrintController`, preview form navigation and zoom, `ucReports` wiring.
+
+## UX Cleanup Pass (after Phase 7B.1)
+
+Usability/consistency pass over the existing ten modules. **No new module, table, feature or schema change; no
+BLL/DAL/business-rule change.** UI code only (plus one data-only cleanup, below).
+
+- **Sidebar** is grouped under headings: OVERVIEW (Dashboard) / MASTER DATA (Categories, Products, Customers,
+  Suppliers, Employees) / INVENTORY (Stock In, Stock Out) / OPERATIONS (Orders) / REPORTING (Reports). Same theme; the
+  headings are plain labels in `frmMain`.
+- **Products:** opens in a clean Add state (no row selected, no category chosen, empty name/price/barcode/description).
+  Selecting a row switches to Edit mode: Add is disabled, Update/Delete enabled, and "Initial Stock" becomes a read-only
+  "Current Stock" (Product update still never writes `QtyInStock`). Clear returns to the Add state. A one-shot reset
+  after first layout stops the freshly bound grid from silently selecting the first product.
+- **Stock In / Stock Out / Orders:** open with no product selected and empty quantity / unit cost / unit price
+  (totals preview 0.00; Available Stock shows a dash until a product is picked). Selecting a product still fills
+  Available Stock and Unit Price where it did before. "Record Stock In", "Record Stock Out" and "Add Item" stay disabled
+  until a product, a whole-number quantity > 0 and a valid price/cost are entered; "Save Pending Order" and
+  "Remove Item" need at least one item. These are display states only - the BLL still performs every validation.
+  After a successful save the form reloads its product list *then* clears (previously the reload could re-select the
+  first product). Confirming an order no longer changes the product picked in the New Order tab.
+- **Demo-data / ID cleanup (`InventoryManagementDB` only):** the IDs 1001/1002/1003 were **not** application logic or a
+  broken IDENTITY (all seeds are `IDENTITY(1,1)`); the counters had jumped to 1000/1001, which is SQL Server's
+  identity-cache jump after an unclean service restart. After a full backup, one transaction re-inserted the same
+  rows with sequential IDs: Product 1001 -> 2, Supplier 1001 -> 2, StockIn 5/6/1002/1003 -> 1-4 (all names, quantities,
+  costs, dates and stock levels unchanged; StockIn references remapped), then identity counters were reseeded to the
+  current max. Verified: no FK violations/orphans, total stock unchanged. `InventoryAppDB` was not touched.
+- **Tests:** regression group O (`Tests.UxCleanup.cs`) covers the clean states, Add/Edit mode and button states; groups
+  M (sidebar order, disabled primary buttons) updated to match. Result: 962 pass / 0 fail (isolated run); dev-readonly
+  run 58 pass / 0 fail. Build: 0 errors, 0 warnings.
+
+## System Currency
+
+**USD ($)** - the system uses one currency only. All monetary values are stored as numeric DECIMAL values (no "$" in
+the database) and are shown as USD in the UI/report presentation layer: field labels and grid headers read
+"Unit Price (USD)", "Unit Cost (USD)", "Total Cost (USD)", "Total Price (USD)", "Line Total (USD)" and
+"Total Amount (USD)"; Report Preview / Print and the report summary lines format money as `$1,250.00`; the Dashboard's
+recent-activity order amounts show a `$`. Display only - no schema, BLL, DAL or calculation change, and no
+multi-currency / exchange-rate support.
+
+## Demo Dataset (`Database/DemoSeed.sql`)
+
+Data-only script that resets `InventoryManagementDB` to a clean agricultural demo (USD): 2 categories (Chemical /
+Natural Fertilizer), 8 products, 3 suppliers, 4 customers, 3 employees, 12 Stock In (2025-2026), 7 Stock Out and
+6 Orders (4 Confirmed, 1 Pending, 1 Cancelled) with natural IDs (1, 2, 3 ...). It deletes the old disposable test rows
+in FK order but never touches `Users`. Stock is derived with the app's own rules (initial 0 + Stock In - Stock Out -
+Confirmed order lines; Pending/Cancelled do not deduct; Orders never create Stock Out rows). It runs in one
+transaction, verifies FKs, calculations, statuses, final stock and that stock never went negative over time, and
+only reseeds identity counters after a successful COMMIT. Re-runnable. Prices are demonstration values, not market
+prices. Run: `sqlcmd -S localhost -E -I -b -i Database\DemoSeed.sql`.
+
 ## Known Testing Limitations
 
 - As in earlier CRUD phases, exact over-limit-length rejections cannot be
@@ -357,9 +620,27 @@ run).
 - `DataGridView` row selection was automated via real mouse clicks at
   computed screen coordinates rather than UI Automation's `GridPattern`,
   consistent with the approach used in earlier phases.
+- Phase 5A testing exercised `frmStockIn` only through the same
+  direct-BLL/DAL console harness approach used for `EmployeeBLL` in Phase
+  4C, not through UI Automation driving the real running window (no UI
+  Automation tooling was available in this environment for this phase). The
+  business logic, validation, transaction, and persistence behavior behind
+  every UI action were verified directly and are exactly what the UI calls,
+  but the UI event wiring itself (button clicks, combo box population,
+  filter controls, grid refresh) was verified by code inspection rather than
+  by driving the compiled `.exe`'s window. See "Manual QA steps" in the
+  Phase 5A report for the walkthrough a human tester should run to close
+  this gap.
+- The transaction-rollback test above only exercises the case where the
+  first statement (`INSERT INTO StockIn`) fails. The case where the insert
+  succeeds but the second statement (`UPDATE Products`) fails independently
+  could not be reproduced practically with the current schema (the same
+  `ProductID` that lets the insert succeed will also satisfy the update's
+  `WHERE` clause), so that specific ordering of failure remains unverified
+  by an executed test, though the code path (`catch` → `Rollback()` →
+  rethrow) is identical for both statements.
 
 ## Stop Condition
 
-Phase 4C is complete and verified. Do not proceed to Stock In, Stock Out,
-Orders, Reports, real Dashboard, or authorization work without explicit
-direction.
+Phase 5A is complete and verified. Do not proceed to Stock Out, Orders,
+Reports, real Dashboard, or authorization work without explicit direction.

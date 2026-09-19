@@ -28,378 +28,295 @@ namespace InventoryManagementSystem.UI
         /// </summary>
         private void InitializeComponent()
         {
-            this.pnlHeader = new System.Windows.Forms.Panel();
-            this.lblAppTitle = new System.Windows.Forms.Label();
-            this.lblUserWelcome = new System.Windows.Forms.Label();
-            this.lblUserRole = new System.Windows.Forms.Label();
-            this.btnLogout = new System.Windows.Forms.Button();
+            this.pnlContent = new System.Windows.Forms.Panel();
             this.pnlNav = new System.Windows.Forms.Panel();
             this.flpNav = new System.Windows.Forms.FlowLayoutPanel();
             this.btnNavDashboard = new System.Windows.Forms.Button();
-            this.btnNavCategories = new System.Windows.Forms.Button();
             this.btnNavProducts = new System.Windows.Forms.Button();
-            this.btnNavCustomers = new System.Windows.Forms.Button();
-            this.btnNavSuppliers = new System.Windows.Forms.Button();
-            this.btnNavEmployees = new System.Windows.Forms.Button();
+            this.btnNavCategories = new System.Windows.Forms.Button();
+            this.lblNavOverview = new System.Windows.Forms.Label();
+            this.lblNavMasterData = new System.Windows.Forms.Label();
+            this.lblNavInventory = new System.Windows.Forms.Label();
+            this.lblNavOperations = new System.Windows.Forms.Label();
+            this.lblNavReporting = new System.Windows.Forms.Label();
             this.btnNavStockIn = new System.Windows.Forms.Button();
             this.btnNavStockOut = new System.Windows.Forms.Button();
             this.btnNavOrders = new System.Windows.Forms.Button();
+            this.btnNavCustomers = new System.Windows.Forms.Button();
+            this.btnNavSuppliers = new System.Windows.Forms.Button();
+            this.btnNavEmployees = new System.Windows.Forms.Button();
             this.btnNavReports = new System.Windows.Forms.Button();
-            this.pnlContent = new System.Windows.Forms.Panel();
-            this.lblPlaceholder = new System.Windows.Forms.Label();
-            this.pnlWelcome = new System.Windows.Forms.Panel();
-            this.lblWelcomeStatus = new System.Windows.Forms.Label();
-            this.lblWelcomeRole = new System.Windows.Forms.Label();
-            this.lblWelcomeGreeting = new System.Windows.Forms.Label();
-            this.lblWelcomeAppName = new System.Windows.Forms.Label();
-            this.pnlHeader.SuspendLayout();
+            this.pnlNavBorder = new System.Windows.Forms.Panel();
+            this.pnlHeader = new System.Windows.Forms.Panel();
+            this.lblAppTitle = new System.Windows.Forms.Label();
+            this.pnlUser = new System.Windows.Forms.Panel();
+            this.pnlUserText = new System.Windows.Forms.Panel();
+            this.lblUserRole = new System.Windows.Forms.Label();
+            this.lblUserWelcome = new System.Windows.Forms.Label();
+            this.btnLogout = new System.Windows.Forms.Button();
             this.pnlNav.SuspendLayout();
             this.flpNav.SuspendLayout();
-            this.pnlContent.SuspendLayout();
-            this.pnlWelcome.SuspendLayout();
+            this.pnlHeader.SuspendLayout();
+            this.pnlUser.SuspendLayout();
+            this.pnlUserText.SuspendLayout();
             this.SuspendLayout();
             //
-            // pnlHeader
+            // pnlContent
             //
-            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(33, 47, 61);
-            this.pnlHeader.Controls.Add(this.lblAppTitle);
-            this.pnlHeader.Controls.Add(this.lblUserWelcome);
-            this.pnlHeader.Controls.Add(this.lblUserRole);
-            this.pnlHeader.Controls.Add(this.btnLogout);
-            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(1000, 64);
-            this.pnlHeader.TabIndex = 0;
-            //
-            // lblAppTitle
-            //
-            this.lblAppTitle.AutoSize = true;
-            this.lblAppTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblAppTitle.ForeColor = System.Drawing.Color.White;
-            this.lblAppTitle.Location = new System.Drawing.Point(20, 16);
-            this.lblAppTitle.Name = "lblAppTitle";
-            this.lblAppTitle.Size = new System.Drawing.Size(320, 25);
-            this.lblAppTitle.TabIndex = 0;
-            this.lblAppTitle.Text = "Inventory Management System";
-            //
-            // lblUserWelcome
-            //
-            this.lblUserWelcome.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblUserWelcome.AutoSize = true;
-            this.lblUserWelcome.ForeColor = System.Drawing.Color.White;
-            this.lblUserWelcome.Location = new System.Drawing.Point(650, 14);
-            this.lblUserWelcome.Name = "lblUserWelcome";
-            this.lblUserWelcome.Size = new System.Drawing.Size(63, 13);
-            this.lblUserWelcome.TabIndex = 1;
-            this.lblUserWelcome.Text = "Welcome,";
-            this.lblUserWelcome.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            //
-            // lblUserRole
-            //
-            this.lblUserRole.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblUserRole.AutoSize = true;
-            this.lblUserRole.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblUserRole.Location = new System.Drawing.Point(650, 36);
-            this.lblUserRole.Name = "lblUserRole";
-            this.lblUserRole.Size = new System.Drawing.Size(34, 13);
-            this.lblUserRole.TabIndex = 2;
-            this.lblUserRole.Text = "Role:";
-            this.lblUserRole.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            //
-            // btnLogout
-            //
-            this.btnLogout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLogout.ForeColor = System.Drawing.Color.White;
-            this.btnLogout.Location = new System.Drawing.Point(890, 16);
-            this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(90, 32);
-            this.btnLogout.TabIndex = 3;
-            this.btnLogout.Text = "Logout";
-            this.btnLogout.UseVisualStyleBackColor = false;
-            this.btnLogout.BackColor = System.Drawing.Color.FromArgb(60, 76, 92);
-            this.btnLogout.FlatAppearance.BorderSize = 0;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            this.pnlContent.BackColor = System.Drawing.Color.White;
+            this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlContent.Location = new System.Drawing.Point(230, 68);
+            this.pnlContent.Name = "pnlContent";
+            this.pnlContent.Size = new System.Drawing.Size(970, 652);
+            this.pnlContent.TabIndex = 2;
             //
             // pnlNav
             //
-            this.pnlNav.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
+            this.pnlNav.BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
             this.pnlNav.Controls.Add(this.flpNav);
+            this.pnlNav.Controls.Add(this.pnlNavBorder);
             this.pnlNav.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlNav.Location = new System.Drawing.Point(0, 64);
+            this.pnlNav.Location = new System.Drawing.Point(0, 68);
             this.pnlNav.Name = "pnlNav";
-            this.pnlNav.Size = new System.Drawing.Size(190, 556);
+            this.pnlNav.Size = new System.Drawing.Size(230, 652);
             this.pnlNav.TabIndex = 1;
+            //
+            // pnlNavBorder
+            //
+            this.pnlNavBorder.BackColor = System.Drawing.Color.FromArgb(203, 213, 225);
+            this.pnlNavBorder.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlNavBorder.Name = "pnlNavBorder";
+            this.pnlNavBorder.Size = new System.Drawing.Size(1, 652);
+            this.pnlNavBorder.TabIndex = 1;
             //
             // flpNav
             //
             this.flpNav.AutoScroll = true;
+            this.flpNav.Controls.Add(this.lblNavOverview);
             this.flpNav.Controls.Add(this.btnNavDashboard);
+            this.flpNav.Controls.Add(this.lblNavMasterData);
             this.flpNav.Controls.Add(this.btnNavCategories);
             this.flpNav.Controls.Add(this.btnNavProducts);
             this.flpNav.Controls.Add(this.btnNavCustomers);
             this.flpNav.Controls.Add(this.btnNavSuppliers);
             this.flpNav.Controls.Add(this.btnNavEmployees);
+            this.flpNav.Controls.Add(this.lblNavInventory);
             this.flpNav.Controls.Add(this.btnNavStockIn);
             this.flpNav.Controls.Add(this.btnNavStockOut);
+            this.flpNav.Controls.Add(this.lblNavOperations);
             this.flpNav.Controls.Add(this.btnNavOrders);
+            this.flpNav.Controls.Add(this.lblNavReporting);
             this.flpNav.Controls.Add(this.btnNavReports);
             this.flpNav.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpNav.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpNav.Location = new System.Drawing.Point(0, 0);
             this.flpNav.Name = "flpNav";
-            this.flpNav.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.flpNav.Size = new System.Drawing.Size(190, 556);
+            this.flpNav.Padding = new System.Windows.Forms.Padding(10, 12, 10, 8);
+            this.flpNav.Size = new System.Drawing.Size(229, 652);
             this.flpNav.TabIndex = 0;
             this.flpNav.WrapContents = false;
+            this.flpNav.Resize += new System.EventHandler(this.flpNav_Resize);
             //
             // btnNavDashboard
             //
-            this.btnNavDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavDashboard.Location = new System.Drawing.Point(3, 3);
-            this.btnNavDashboard.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.btnNavDashboard.Name = "btnNavDashboard";
-            this.btnNavDashboard.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavDashboard.Size = new System.Drawing.Size(180, 42);
             this.btnNavDashboard.TabIndex = 0;
             this.btnNavDashboard.Tag = "Dashboard";
             this.btnNavDashboard.Text = "Dashboard";
-            this.btnNavDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavDashboard.UseVisualStyleBackColor = true;
             this.btnNavDashboard.Click += new System.EventHandler(this.NavButton_Click);
-            //
-            // btnNavCategories
-            //
-            this.btnNavCategories.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavCategories.Location = new System.Drawing.Point(3, 48);
-            this.btnNavCategories.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.btnNavCategories.Name = "btnNavCategories";
-            this.btnNavCategories.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavCategories.Size = new System.Drawing.Size(180, 42);
-            this.btnNavCategories.TabIndex = 1;
-            this.btnNavCategories.Tag = "Categories";
-            this.btnNavCategories.Text = "Categories";
-            this.btnNavCategories.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavCategories.UseVisualStyleBackColor = true;
-            this.btnNavCategories.Click += new System.EventHandler(this.NavButton_Click);
             //
             // btnNavProducts
             //
-            this.btnNavProducts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavProducts.Location = new System.Drawing.Point(3, 93);
-            this.btnNavProducts.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.btnNavProducts.Name = "btnNavProducts";
-            this.btnNavProducts.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavProducts.Size = new System.Drawing.Size(180, 42);
-            this.btnNavProducts.TabIndex = 2;
+            this.btnNavProducts.TabIndex = 1;
             this.btnNavProducts.Tag = "Products";
             this.btnNavProducts.Text = "Products";
-            this.btnNavProducts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavProducts.UseVisualStyleBackColor = true;
             this.btnNavProducts.Click += new System.EventHandler(this.NavButton_Click);
             //
-            // btnNavCustomers
+            // btnNavCategories
             //
-            this.btnNavCustomers.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavCustomers.Location = new System.Drawing.Point(3, 138);
-            this.btnNavCustomers.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.btnNavCustomers.Name = "btnNavCustomers";
-            this.btnNavCustomers.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavCustomers.Size = new System.Drawing.Size(180, 42);
-            this.btnNavCustomers.TabIndex = 3;
-            this.btnNavCustomers.Tag = "Customers";
-            this.btnNavCustomers.Text = "Customers";
-            this.btnNavCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavCustomers.UseVisualStyleBackColor = true;
-            this.btnNavCustomers.Click += new System.EventHandler(this.NavButton_Click);
+            this.btnNavCategories.Name = "btnNavCategories";
+            this.btnNavCategories.TabIndex = 2;
+            this.btnNavCategories.Tag = "Categories";
+            this.btnNavCategories.Text = "Categories";
+            this.btnNavCategories.Click += new System.EventHandler(this.NavButton_Click);
             //
-            // btnNavSuppliers
+            // lblNavOverview
             //
-            this.btnNavSuppliers.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavSuppliers.Location = new System.Drawing.Point(3, 183);
-            this.btnNavSuppliers.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.btnNavSuppliers.Name = "btnNavSuppliers";
-            this.btnNavSuppliers.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavSuppliers.Size = new System.Drawing.Size(180, 42);
-            this.btnNavSuppliers.TabIndex = 4;
-            this.btnNavSuppliers.Tag = "Suppliers";
-            this.btnNavSuppliers.Text = "Suppliers";
-            this.btnNavSuppliers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavSuppliers.UseVisualStyleBackColor = true;
-            this.btnNavSuppliers.Click += new System.EventHandler(this.NavButton_Click);
+            this.lblNavOverview.Name = "lblNavOverview";
+            this.lblNavOverview.Text = "OVERVIEW";
             //
-            // btnNavEmployees
+            // lblNavMasterData
             //
-            this.btnNavEmployees.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavEmployees.Location = new System.Drawing.Point(3, 228);
-            this.btnNavEmployees.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.btnNavEmployees.Name = "btnNavEmployees";
-            this.btnNavEmployees.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavEmployees.Size = new System.Drawing.Size(180, 42);
-            this.btnNavEmployees.TabIndex = 5;
-            this.btnNavEmployees.Tag = "Employees";
-            this.btnNavEmployees.Text = "Employees";
-            this.btnNavEmployees.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavEmployees.UseVisualStyleBackColor = true;
-            this.btnNavEmployees.Click += new System.EventHandler(this.NavButton_Click);
+            this.lblNavMasterData.Name = "lblNavMasterData";
+            this.lblNavMasterData.Text = "MASTER DATA";
+            //
+            // lblNavInventory
+            //
+            this.lblNavInventory.Name = "lblNavInventory";
+            this.lblNavInventory.Text = "INVENTORY";
+            //
+            // lblNavOperations
+            //
+            this.lblNavOperations.Name = "lblNavOperations";
+            this.lblNavOperations.Text = "OPERATIONS";
+            //
+            // lblNavReporting
+            //
+            this.lblNavReporting.Name = "lblNavReporting";
+            this.lblNavReporting.Text = "REPORTING";
             //
             // btnNavStockIn
             //
-            this.btnNavStockIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavStockIn.Location = new System.Drawing.Point(3, 273);
-            this.btnNavStockIn.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.btnNavStockIn.Name = "btnNavStockIn";
-            this.btnNavStockIn.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavStockIn.Size = new System.Drawing.Size(180, 42);
-            this.btnNavStockIn.TabIndex = 6;
+            this.btnNavStockIn.TabIndex = 3;
             this.btnNavStockIn.Tag = "Stock In";
             this.btnNavStockIn.Text = "Stock In";
-            this.btnNavStockIn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavStockIn.UseVisualStyleBackColor = true;
             this.btnNavStockIn.Click += new System.EventHandler(this.NavButton_Click);
             //
             // btnNavStockOut
             //
-            this.btnNavStockOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavStockOut.Location = new System.Drawing.Point(3, 318);
-            this.btnNavStockOut.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.btnNavStockOut.Name = "btnNavStockOut";
-            this.btnNavStockOut.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavStockOut.Size = new System.Drawing.Size(180, 42);
-            this.btnNavStockOut.TabIndex = 7;
+            this.btnNavStockOut.TabIndex = 4;
             this.btnNavStockOut.Tag = "Stock Out";
             this.btnNavStockOut.Text = "Stock Out";
-            this.btnNavStockOut.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavStockOut.UseVisualStyleBackColor = true;
             this.btnNavStockOut.Click += new System.EventHandler(this.NavButton_Click);
             //
             // btnNavOrders
             //
-            this.btnNavOrders.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavOrders.Location = new System.Drawing.Point(3, 363);
-            this.btnNavOrders.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.btnNavOrders.Name = "btnNavOrders";
-            this.btnNavOrders.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavOrders.Size = new System.Drawing.Size(180, 42);
-            this.btnNavOrders.TabIndex = 8;
+            this.btnNavOrders.TabIndex = 5;
             this.btnNavOrders.Tag = "Orders";
             this.btnNavOrders.Text = "Orders";
-            this.btnNavOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavOrders.UseVisualStyleBackColor = true;
             this.btnNavOrders.Click += new System.EventHandler(this.NavButton_Click);
+            //
+            // btnNavCustomers
+            //
+            this.btnNavCustomers.Name = "btnNavCustomers";
+            this.btnNavCustomers.TabIndex = 6;
+            this.btnNavCustomers.Tag = "Customers";
+            this.btnNavCustomers.Text = "Customers";
+            this.btnNavCustomers.Click += new System.EventHandler(this.NavButton_Click);
+            //
+            // btnNavSuppliers
+            //
+            this.btnNavSuppliers.Name = "btnNavSuppliers";
+            this.btnNavSuppliers.TabIndex = 7;
+            this.btnNavSuppliers.Tag = "Suppliers";
+            this.btnNavSuppliers.Text = "Suppliers";
+            this.btnNavSuppliers.Click += new System.EventHandler(this.NavButton_Click);
+            //
+            // btnNavEmployees
+            //
+            this.btnNavEmployees.Name = "btnNavEmployees";
+            this.btnNavEmployees.TabIndex = 8;
+            this.btnNavEmployees.Tag = "Employees";
+            this.btnNavEmployees.Text = "Employees";
+            this.btnNavEmployees.Click += new System.EventHandler(this.NavButton_Click);
             //
             // btnNavReports
             //
-            this.btnNavReports.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavReports.Location = new System.Drawing.Point(3, 408);
-            this.btnNavReports.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.btnNavReports.Name = "btnNavReports";
-            this.btnNavReports.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.btnNavReports.Size = new System.Drawing.Size(180, 42);
             this.btnNavReports.TabIndex = 9;
             this.btnNavReports.Tag = "Reports";
             this.btnNavReports.Text = "Reports";
-            this.btnNavReports.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavReports.UseVisualStyleBackColor = true;
             this.btnNavReports.Click += new System.EventHandler(this.NavButton_Click);
             //
-            // pnlContent
+            // pnlHeader
             //
-            this.pnlContent.BackColor = System.Drawing.Color.White;
-            this.pnlContent.Controls.Add(this.lblPlaceholder);
-            this.pnlContent.Controls.Add(this.pnlWelcome);
-            this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlContent.Location = new System.Drawing.Point(190, 64);
-            this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Padding = new System.Windows.Forms.Padding(30);
-            this.pnlContent.Size = new System.Drawing.Size(810, 556);
-            this.pnlContent.TabIndex = 2;
+            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(33, 47, 61);
+            this.pnlHeader.Controls.Add(this.lblAppTitle);
+            this.pnlHeader.Controls.Add(this.pnlUser);
+            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
+            this.pnlHeader.Name = "pnlHeader";
+            this.pnlHeader.Padding = new System.Windows.Forms.Padding(24, 0, 0, 0);
+            this.pnlHeader.Size = new System.Drawing.Size(1200, 68);
+            this.pnlHeader.TabIndex = 0;
             //
-            // lblPlaceholder
+            // lblAppTitle
             //
-            this.lblPlaceholder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPlaceholder.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.lblPlaceholder.ForeColor = System.Drawing.Color.DimGray;
-            this.lblPlaceholder.Location = new System.Drawing.Point(30, 30);
-            this.lblPlaceholder.Name = "lblPlaceholder";
-            this.lblPlaceholder.Size = new System.Drawing.Size(750, 496);
-            this.lblPlaceholder.TabIndex = 1;
-            this.lblPlaceholder.Text = "This module will be implemented in a future phase.";
-            this.lblPlaceholder.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblPlaceholder.Visible = false;
+            this.lblAppTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAppTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
+            this.lblAppTitle.ForeColor = System.Drawing.Color.White;
+            this.lblAppTitle.Name = "lblAppTitle";
+            this.lblAppTitle.TabIndex = 0;
+            this.lblAppTitle.Text = "Inventory Management System";
+            this.lblAppTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             //
-            // pnlWelcome
+            // pnlUser
             //
-            this.pnlWelcome.Controls.Add(this.lblWelcomeStatus);
-            this.pnlWelcome.Controls.Add(this.lblWelcomeRole);
-            this.pnlWelcome.Controls.Add(this.lblWelcomeGreeting);
-            this.pnlWelcome.Controls.Add(this.lblWelcomeAppName);
-            this.pnlWelcome.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlWelcome.Location = new System.Drawing.Point(30, 30);
-            this.pnlWelcome.Name = "pnlWelcome";
-            this.pnlWelcome.Size = new System.Drawing.Size(750, 496);
-            this.pnlWelcome.TabIndex = 0;
+            this.pnlUser.Controls.Add(this.pnlUserText);
+            this.pnlUser.Controls.Add(this.btnLogout);
+            this.pnlUser.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlUser.Name = "pnlUser";
+            this.pnlUser.Padding = new System.Windows.Forms.Padding(0, 15, 24, 15);
+            this.pnlUser.Size = new System.Drawing.Size(420, 68);
+            this.pnlUser.TabIndex = 1;
             //
-            // lblWelcomeStatus
+            // btnLogout
             //
-            this.lblWelcomeStatus.AutoSize = true;
-            this.lblWelcomeStatus.ForeColor = System.Drawing.Color.DimGray;
-            this.lblWelcomeStatus.Location = new System.Drawing.Point(3, 130);
-            this.lblWelcomeStatus.Name = "lblWelcomeStatus";
-            this.lblWelcomeStatus.Size = new System.Drawing.Size(300, 13);
-            this.lblWelcomeStatus.TabIndex = 3;
-            this.lblWelcomeStatus.Text = "Status: Login and navigation foundation active.";
+            this.btnLogout.BackColor = System.Drawing.Color.FromArgb(60, 76, 92);
+            this.btnLogout.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnLogout.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(100, 116, 139);
+            this.btnLogout.FlatAppearance.BorderSize = 1;
+            this.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLogout.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
+            this.btnLogout.ForeColor = System.Drawing.Color.White;
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(96, 38);
+            this.btnLogout.TabIndex = 1;
+            this.btnLogout.Text = "Logout";
+            this.btnLogout.UseVisualStyleBackColor = false;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             //
-            // lblWelcomeRole
+            // pnlUserText
             //
-            this.lblWelcomeRole.AutoSize = true;
-            this.lblWelcomeRole.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblWelcomeRole.Location = new System.Drawing.Point(3, 100);
-            this.lblWelcomeRole.Name = "lblWelcomeRole";
-            this.lblWelcomeRole.Size = new System.Drawing.Size(38, 19);
-            this.lblWelcomeRole.TabIndex = 2;
-            this.lblWelcomeRole.Text = "Role:";
+            this.pnlUserText.Controls.Add(this.lblUserRole);
+            this.pnlUserText.Controls.Add(this.lblUserWelcome);
+            this.pnlUserText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlUserText.Name = "pnlUserText";
+            this.pnlUserText.Padding = new System.Windows.Forms.Padding(0, 0, 16, 0);
+            this.pnlUserText.TabIndex = 0;
             //
-            // lblWelcomeGreeting
+            // lblUserWelcome
             //
-            this.lblWelcomeGreeting.AutoSize = true;
-            this.lblWelcomeGreeting.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblWelcomeGreeting.Location = new System.Drawing.Point(3, 70);
-            this.lblWelcomeGreeting.Name = "lblWelcomeGreeting";
-            this.lblWelcomeGreeting.Size = new System.Drawing.Size(75, 19);
-            this.lblWelcomeGreeting.TabIndex = 1;
-            this.lblWelcomeGreeting.Text = "Welcome,";
+            this.lblUserWelcome.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblUserWelcome.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
+            this.lblUserWelcome.ForeColor = System.Drawing.Color.White;
+            this.lblUserWelcome.Name = "lblUserWelcome";
+            this.lblUserWelcome.Size = new System.Drawing.Size(280, 21);
+            this.lblUserWelcome.TabIndex = 0;
+            this.lblUserWelcome.Text = "Welcome,";
+            this.lblUserWelcome.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             //
-            // lblWelcomeAppName
+            // lblUserRole
             //
-            this.lblWelcomeAppName.AutoSize = true;
-            this.lblWelcomeAppName.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblWelcomeAppName.Location = new System.Drawing.Point(0, 20);
-            this.lblWelcomeAppName.Name = "lblWelcomeAppName";
-            this.lblWelcomeAppName.Size = new System.Drawing.Size(320, 30);
-            this.lblWelcomeAppName.TabIndex = 0;
-            this.lblWelcomeAppName.Text = "Inventory Management System";
+            this.lblUserRole.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblUserRole.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lblUserRole.ForeColor = System.Drawing.Color.FromArgb(203, 213, 225);
+            this.lblUserRole.Name = "lblUserRole";
+            this.lblUserRole.TabIndex = 1;
+            this.lblUserRole.Text = "Role:";
+            this.lblUserRole.TextAlign = System.Drawing.ContentAlignment.TopRight;
             //
             // frmMain
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 620);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(1200, 700);
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlNav);
             this.Controls.Add(this.pnlHeader);
-            this.MinimumSize = new System.Drawing.Size(800, 500);
+            this.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.MinimumSize = new System.Drawing.Size(1100, 640);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Inventory Management System";
-            this.pnlHeader.ResumeLayout(false);
-            this.pnlHeader.PerformLayout();
             this.pnlNav.ResumeLayout(false);
             this.flpNav.ResumeLayout(false);
-            this.pnlContent.ResumeLayout(false);
-            this.pnlWelcome.ResumeLayout(false);
-            this.pnlWelcome.PerformLayout();
+            this.pnlHeader.ResumeLayout(false);
+            this.pnlUser.ResumeLayout(false);
+            this.pnlUserText.ResumeLayout(false);
             this.ResumeLayout(false);
         }
 
@@ -407,29 +324,29 @@ namespace InventoryManagementSystem.UI
 
         private System.Windows.Forms.Panel pnlHeader;
         private System.Windows.Forms.Label lblAppTitle;
+        private System.Windows.Forms.Panel pnlUser;
+        private System.Windows.Forms.Panel pnlUserText;
         private System.Windows.Forms.Label lblUserWelcome;
         private System.Windows.Forms.Label lblUserRole;
         private System.Windows.Forms.Button btnLogout;
-
         private System.Windows.Forms.Panel pnlNav;
+        private System.Windows.Forms.Panel pnlNavBorder;
         private System.Windows.Forms.FlowLayoutPanel flpNav;
         private System.Windows.Forms.Button btnNavDashboard;
-        private System.Windows.Forms.Button btnNavCategories;
         private System.Windows.Forms.Button btnNavProducts;
-        private System.Windows.Forms.Button btnNavCustomers;
-        private System.Windows.Forms.Button btnNavSuppliers;
-        private System.Windows.Forms.Button btnNavEmployees;
+        private System.Windows.Forms.Button btnNavCategories;
+        private System.Windows.Forms.Label lblNavOverview;
+        private System.Windows.Forms.Label lblNavMasterData;
+        private System.Windows.Forms.Label lblNavInventory;
+        private System.Windows.Forms.Label lblNavOperations;
+        private System.Windows.Forms.Label lblNavReporting;
         private System.Windows.Forms.Button btnNavStockIn;
         private System.Windows.Forms.Button btnNavStockOut;
         private System.Windows.Forms.Button btnNavOrders;
+        private System.Windows.Forms.Button btnNavCustomers;
+        private System.Windows.Forms.Button btnNavSuppliers;
+        private System.Windows.Forms.Button btnNavEmployees;
         private System.Windows.Forms.Button btnNavReports;
-
         private System.Windows.Forms.Panel pnlContent;
-        private System.Windows.Forms.Label lblPlaceholder;
-        private System.Windows.Forms.Panel pnlWelcome;
-        private System.Windows.Forms.Label lblWelcomeStatus;
-        private System.Windows.Forms.Label lblWelcomeRole;
-        private System.Windows.Forms.Label lblWelcomeGreeting;
-        private System.Windows.Forms.Label lblWelcomeAppName;
     }
 }
