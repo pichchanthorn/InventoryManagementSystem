@@ -1,6 +1,6 @@
 namespace InventoryManagementSystem.UI
 {
-    partial class frmEmployees
+    partial class ucEmployees
     {
         /// <summary>
         /// Required designer variable.
@@ -290,18 +290,17 @@ namespace InventoryManagementSystem.UI
             this.colAddress.Name = "colAddress";
             this.colAddress.ReadOnly = true;
             //
-            // frmEmployees
+            // ucEmployees
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(760, 600);
+            this.Size = new System.Drawing.Size(760, 600);
             this.Controls.Add(this.dgvEmployees);
             this.Controls.Add(this.pnlForm);
-            this.MinimumSize = new System.Drawing.Size(650, 480);
-            this.Name = "frmEmployees";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Employees";
-            this.Load += new System.EventHandler(this.frmEmployees_Load);
+            this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(650, 480);
+            this.Name = "ucEmployees";
+            this.Load += new System.EventHandler(this.ucEmployees_Load);
             this.pnlForm.ResumeLayout(false);
             this.pnlForm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmployees)).EndInit();

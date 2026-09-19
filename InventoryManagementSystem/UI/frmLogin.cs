@@ -69,17 +69,5 @@ namespace InventoryManagementSystem.UI
             DialogResult = DialogResult.Cancel;
             Close();
         }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // frmLogin
-            // 
-            this.ClientSize = new System.Drawing.Size(829, 413);
-            this.Name = "frmLogin";
-            this.ResumeLayout(false);
-
-        }
     }
 }

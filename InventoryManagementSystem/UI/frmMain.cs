@@ -1,29 +1,42 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 using InventoryManagementSystem.Entity;
 
 namespace InventoryManagementSystem.UI
 {
+    /// <summary>
+    /// Application shell: header + sidebar + one content area. Every module is a UserControl page shown inside
+    /// the content area; navigation never opens another top-level window.
+    /// </summary>
     public partial class frmMain : Form
     {
-        private static readonly Color NavDefaultBackColor = Color.FromArgb(240, 240, 240);
-        private static readonly Color NavSelectedBackColor = Color.FromArgb(0, 120, 215);
+        private static readonly Color NavDefaultBackColor = Color.FromArgb(245, 247, 250);
+        private static readonly Color NavHoverBackColor = Color.FromArgb(226, 232, 240);
+
+        private const string DashboardKey = "Dashboard";
 
         private Button[] _navButtons;
-        private frmCategories _frmCategories;
-        private frmProducts _frmProducts;
-        private frmCustomers _frmCustomers;
-        private frmSuppliers _frmSuppliers;
-        private frmEmployees _frmEmployees;
+        private Label[] _navHeadings;
+        private Button _selectedNavButton;
+        private ucDashboard _dashboard;      // created once, refreshed every time it is shown
+        private UserControl _currentPage;
+        private string _currentKey;
 
         public UserEntity AuthenticatedUser { get; private set; }
         public bool LogoutRequested { get; private set; }
+
+        /// <summary>The page currently shown in the content area (never null once a module has been selected).</summary>
+        public UserControl CurrentPage { get { return _currentPage; } }
+
+        /// <summary>Navigation key of the current page, e.g. "Stock In".</summary>
+        public string CurrentModule { get { return _currentKey; } }
 
         public frmMain()
         {
             InitializeComponent();
             InitializeNavigation();
+            InitializeDashboard();
         }
 
         public frmMain(UserEntity authenticatedUser) : this()
@@ -34,34 +47,77 @@ namespace InventoryManagementSystem.UI
             {
                 lblUserWelcome.Text = "Welcome, " + AuthenticatedUser.FullName;
                 lblUserRole.Text = "Role: " + AuthenticatedUser.Role;
-                lblWelcomeGreeting.Text = "Welcome, " + AuthenticatedUser.FullName;
-                lblWelcomeRole.Text = "Role: " + AuthenticatedUser.Role;
             }
 
             SelectModule(btnNavDashboard);
         }
 
+        // ---- navigation ------------------------------------------------------------------------
+
         private void InitializeNavigation()
         {
             _navButtons = new[]
             {
-                btnNavDashboard,
-                btnNavCategories,
-                btnNavProducts,
-                btnNavCustomers,
-                btnNavSuppliers,
-                btnNavEmployees,
-                btnNavStockIn,
-                btnNavStockOut,
-                btnNavOrders,
-                btnNavReports
+                btnNavDashboard, btnNavCategories, btnNavProducts, btnNavCustomers, btnNavSuppliers, btnNavEmployees,
+                btnNavStockIn, btnNavStockOut, btnNavOrders, btnNavReports
             };
+            _navHeadings = new[] { lblNavOverview, lblNavMasterData, lblNavInventory, lblNavOperations, lblNavReporting };
 
             foreach (Button navButton in _navButtons)
             {
+                navButton.FlatStyle = FlatStyle.Flat;
                 navButton.FlatAppearance.BorderSize = 0;
+                navButton.UseVisualStyleBackColor = false;
                 navButton.BackColor = NavDefaultBackColor;
+                navButton.ForeColor = Theme.TextDark;
+                navButton.Font = Theme.BaseFont;
+                navButton.Cursor = Cursors.Hand;
+                navButton.TextAlign = ContentAlignment.MiddleLeft;
+                navButton.Padding = new Padding(26, 0, 0, 0);
+                navButton.Margin = new Padding(0, 1, 0, 1);
+                navButton.Height = 36;
+
+                Button captured = navButton;
+                navButton.MouseEnter += (s, e) => { if (captured != _selectedNavButton) captured.BackColor = NavHoverBackColor; };
+                navButton.MouseLeave += (s, e) => { if (captured != _selectedNavButton) captured.BackColor = NavDefaultBackColor; };
             }
+
+            // Group headings: OVERVIEW / MASTER DATA / INVENTORY / OPERATIONS / REPORTING
+            foreach (Label heading in _navHeadings)
+            {
+                heading.AutoSize = false;
+                heading.Height = 26;
+                heading.Margin = new Padding(0, heading == lblNavOverview ? 0 : 8, 0, 0);
+                heading.Padding = new Padding(14, 0, 0, 0);
+                heading.Font = new Font("Segoe UI Semibold", 8.5F);
+                heading.ForeColor = Theme.TextMuted;
+                heading.TextAlign = ContentAlignment.BottomLeft;
+            }
+
+            btnLogout.MouseEnter += (s, e) => btnLogout.BackColor = Color.FromArgb(80, 96, 112);
+            btnLogout.MouseLeave += (s, e) => btnLogout.BackColor = Color.FromArgb(60, 76, 92);
+
+            ResizeNavButtons();
+        }
+
+        private void flpNav_Resize(object sender, EventArgs e)
+        {
+            ResizeNavButtons();
+        }
+
+        private void ResizeNavButtons()
+        {
+            if (_navButtons == null)
+                return;
+
+            int width = flpNav.ClientSize.Width - flpNav.Padding.Horizontal;
+            if (width < 100)
+                return;
+
+            foreach (Button navButton in _navButtons)
+                navButton.Width = width;
+            foreach (Label heading in _navHeadings)
+                heading.Width = width;
         }
 
         private void NavButton_Click(object sender, EventArgs e)
@@ -71,169 +127,92 @@ namespace InventoryManagementSystem.UI
 
         private void SelectModule(Button selectedButton)
         {
+            _selectedNavButton = selectedButton;
             foreach (Button navButton in _navButtons)
             {
                 bool isSelected = navButton == selectedButton;
-                navButton.BackColor = isSelected ? NavSelectedBackColor : NavDefaultBackColor;
-                navButton.ForeColor = isSelected ? Color.White : Color.Black;
+                navButton.BackColor = isSelected ? Theme.Primary : NavDefaultBackColor;
+                navButton.ForeColor = isSelected ? Color.White : Theme.TextDark;
+                navButton.Font = isSelected ? Theme.SemiboldFont : Theme.BaseFont;
             }
 
-            string moduleName = (string)selectedButton.Tag;
+            ShowModule((string)selectedButton.Tag);
+        }
 
-            if (moduleName == "Dashboard")
+        // ---- content area ----------------------------------------------------------------------
+
+        private void InitializeDashboard()
+        {
+            _dashboard = new ucDashboard();
+        }
+
+        private void ShowModule(string key)
+        {
+            if (key == DashboardKey)
             {
-                pnlWelcome.Visible = true;
-                lblPlaceholder.Visible = false;
+                ShowPage(_dashboard, key);
+                _dashboard.LoadData();   // always re-query when the Dashboard is (re)selected
+                return;
             }
-            else if (moduleName == "Categories")
+
+            // Selecting the page that is already showing keeps it (and anything half-typed) as is.
+            if (key == _currentKey && _currentPage != null && !_currentPage.IsDisposed)
+                return;
+
+            ShowPage(CreatePage(key), key);
+        }
+
+        private static UserControl CreatePage(string key)
+        {
+            switch (key)
             {
-                pnlWelcome.Visible = false;
-                lblPlaceholder.Text = "Categories — the Category Management window is open. Close it to return here.";
-                lblPlaceholder.Visible = true;
-                OpenCategoriesModule();
-            }
-            else if (moduleName == "Products")
-            {
-                pnlWelcome.Visible = false;
-                lblPlaceholder.Text = "Products — the Product Management window is open. Close it to return here.";
-                lblPlaceholder.Visible = true;
-                OpenProductsModule();
-            }
-            else if (moduleName == "Customers")
-            {
-                pnlWelcome.Visible = false;
-                lblPlaceholder.Text = "Customers — the Customer Management window is open. Close it to return here.";
-                lblPlaceholder.Visible = true;
-                OpenCustomersModule();
-            }
-            else if (moduleName == "Suppliers")
-            {
-                pnlWelcome.Visible = false;
-                lblPlaceholder.Text = "Suppliers — the Supplier Management window is open. Close it to return here.";
-                lblPlaceholder.Visible = true;
-                OpenSuppliersModule();
-            }
-            else if (moduleName == "Employees")
-            {
-                pnlWelcome.Visible = false;
-                lblPlaceholder.Text = "Employees — the Employee Management window is open. Close it to return here.";
-                lblPlaceholder.Visible = true;
-                OpenEmployeesModule();
-            }
-            else
-            {
-                lblPlaceholder.Text = moduleName + " — This module will be implemented in a future phase.";
-                pnlWelcome.Visible = false;
-                lblPlaceholder.Visible = true;
+                case "Categories": return new ucCategories();
+                case "Products": return new ucProducts();
+                case "Customers": return new ucCustomers();
+                case "Suppliers": return new ucSuppliers();
+                case "Employees": return new ucEmployees();
+                case "Stock In": return new ucStockIn();
+                case "Stock Out": return new ucStockOut();
+                case "Orders": return new ucOrders();
+                case "Reports": return new ucReports();
+                default: throw new ArgumentException("Unknown module: " + key);
             }
         }
 
-        private void OpenCategoriesModule()
+        /// <summary>Replaces whatever is in the content area with <paramref name="page"/>; exactly one page is ever hosted.</summary>
+        private void ShowPage(UserControl page, string key)
         {
-            if (_frmCategories == null || _frmCategories.IsDisposed)
-            {
-                _frmCategories = new frmCategories();
-                _frmCategories.FormClosed += (sender, e) => { _frmCategories = null; };
-                _frmCategories.Show();
-            }
-            else
-            {
-                if (_frmCategories.WindowState == FormWindowState.Minimized)
-                    _frmCategories.WindowState = FormWindowState.Normal;
+            SuspendLayout();
+            pnlContent.SuspendLayout();
 
-                _frmCategories.Activate();
-                _frmCategories.BringToFront();
-            }
-        }
-
-        private void OpenProductsModule()
-        {
-            if (_frmProducts == null || _frmProducts.IsDisposed)
+            UserControl previous = _currentPage;
+            if (previous != null && previous != page)
             {
-                _frmProducts = new frmProducts();
-                _frmProducts.FormClosed += (sender, e) => { _frmProducts = null; };
-                _frmProducts.Show();
+                pnlContent.Controls.Remove(previous);
+                if (previous != _dashboard)
+                    previous.Dispose();      // pages are cheap to rebuild and always start with fresh data
             }
-            else
-            {
-                if (_frmProducts.WindowState == FormWindowState.Minimized)
-                    _frmProducts.WindowState = FormWindowState.Normal;
 
-                _frmProducts.Activate();
-                _frmProducts.BringToFront();
-            }
-        }
-
-        private void OpenCustomersModule()
-        {
-            if (_frmCustomers == null || _frmCustomers.IsDisposed)
+            if (page.Parent != pnlContent)
             {
-                _frmCustomers = new frmCustomers();
-                _frmCustomers.FormClosed += (sender, e) => { _frmCustomers = null; };
-                _frmCustomers.Show();
+                page.Dock = DockStyle.Fill;
+                pnlContent.Controls.Add(page);
             }
-            else
-            {
-                if (_frmCustomers.WindowState == FormWindowState.Minimized)
-                    _frmCustomers.WindowState = FormWindowState.Normal;
+            page.Visible = true;
+            page.BringToFront();
 
-                _frmCustomers.Activate();
-                _frmCustomers.BringToFront();
-            }
-        }
+            _currentPage = page;
+            _currentKey = key;
+            Text = "Inventory Management System - " + key;
 
-        private void OpenSuppliersModule()
-        {
-            if (_frmSuppliers == null || _frmSuppliers.IsDisposed)
-            {
-                _frmSuppliers = new frmSuppliers();
-                _frmSuppliers.FormClosed += (sender, e) => { _frmSuppliers = null; };
-                _frmSuppliers.Show();
-            }
-            else
-            {
-                if (_frmSuppliers.WindowState == FormWindowState.Minimized)
-                    _frmSuppliers.WindowState = FormWindowState.Normal;
-
-                _frmSuppliers.Activate();
-                _frmSuppliers.BringToFront();
-            }
-        }
-
-        private void OpenEmployeesModule()
-        {
-            if (_frmEmployees == null || _frmEmployees.IsDisposed)
-            {
-                _frmEmployees = new frmEmployees();
-                _frmEmployees.FormClosed += (sender, e) => { _frmEmployees = null; };
-                _frmEmployees.Show();
-            }
-            else
-            {
-                if (_frmEmployees.WindowState == FormWindowState.Minimized)
-                    _frmEmployees.WindowState = FormWindowState.Normal;
-
-                _frmEmployees.Activate();
-                _frmEmployees.BringToFront();
-            }
+            pnlContent.ResumeLayout(true);
+            ResumeLayout(true);
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
             LogoutRequested = true;
             Close();
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // frmMain
-            // 
-            this.ClientSize = new System.Drawing.Size(838, 451);
-            this.Name = "frmMain";
-            this.ResumeLayout(false);
-
         }
     }
 }

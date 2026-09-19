@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using InventoryManagementSystem.BLL;
@@ -6,21 +6,28 @@ using InventoryManagementSystem.Entity;
 
 namespace InventoryManagementSystem.UI
 {
-    public partial class frmSuppliers : Form
+    public partial class ucSuppliers : UserControl
     {
         private readonly SupplierBLL _supplierBLL = new SupplierBLL();
         private int _selectedSupplierId;
         private bool _suppressSelectionChanged;
 
-        public frmSuppliers()
+        public ucSuppliers()
         {
+            Font = Theme.BaseFont;
             InitializeComponent();
+            Theme.Apply(this);
+            Theme.AttachEmptyState(dgvSuppliers, "No suppliers found.");
         }
 
-        private void frmSuppliers_Load(object sender, EventArgs e)
+        private void ucSuppliers_Load(object sender, EventArgs e)
         {
             LoadSuppliers();
             ClearForm();
+
+            // A freshly bound DataGridView re-selects its first row once the page is first laid out (after Load),
+            // which would silently put the first record into edit mode. Reset once more after that has happened.
+            BeginInvoke(new Action(ClearForm));
         }
 
         private void LoadSuppliers()
@@ -55,9 +62,17 @@ namespace InventoryManagementSystem.UI
             txtEmail.Text = supplier.Email;
             txtAddress.Text = supplier.Address;
 
-            btnUpdate.Enabled = true;
-            btnDelete.Enabled = true;
+            SetEditMode(true);
         }
+
+        /// <summary>Add mode: Add enabled, Update/Delete disabled. Edit mode (a row is selected): the reverse.</summary>
+        private void SetEditMode(bool editing)
+        {
+            btnAdd.Enabled = !editing;
+            btnUpdate.Enabled = editing;
+            btnDelete.Enabled = editing;
+        }
+
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -151,8 +166,7 @@ namespace InventoryManagementSystem.UI
                 txtAddress.Clear();
                 dgvSuppliers.ClearSelection();
                 dgvSuppliers.CurrentCell = null;
-                btnUpdate.Enabled = false;
-                btnDelete.Enabled = false;
+                SetEditMode(false);
             }
             finally
             {

@@ -1,6 +1,6 @@
 namespace InventoryManagementSystem.UI
 {
-    partial class frmProducts
+    partial class ucProducts
     {
         /// <summary>
         /// Required designer variable.
@@ -141,7 +141,7 @@ namespace InventoryManagementSystem.UI
             this.lblUnitPrice.Name = "lblUnitPrice";
             this.lblUnitPrice.Size = new System.Drawing.Size(58, 13);
             this.lblUnitPrice.TabIndex = 5;
-            this.lblUnitPrice.Text = "Unit Price:";
+            this.lblUnitPrice.Text = "Unit Price (USD):";
             //
             // txtUnitPrice
             //
@@ -316,10 +316,10 @@ namespace InventoryManagementSystem.UI
             dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             dataGridViewCellStyle1.Format = "N2";
             this.colUnitPrice.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colUnitPrice.HeaderText = "Unit Price";
+            this.colUnitPrice.HeaderText = "Unit Price (USD)";
             this.colUnitPrice.Name = "colUnitPrice";
             this.colUnitPrice.ReadOnly = true;
-            this.colUnitPrice.Width = 80;
+            this.colUnitPrice.Width = 140;
             //
             // colQtyInStock
             //
@@ -353,18 +353,17 @@ namespace InventoryManagementSystem.UI
             this.colDescription.Name = "colDescription";
             this.colDescription.ReadOnly = true;
             //
-            // frmProducts
+            // ucProducts
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(820, 560);
+            this.Size = new System.Drawing.Size(820, 560);
             this.Controls.Add(this.dgvProducts);
             this.Controls.Add(this.pnlForm);
-            this.MinimumSize = new System.Drawing.Size(760, 480);
-            this.Name = "frmProducts";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Products";
-            this.Load += new System.EventHandler(this.frmProducts_Load);
+            this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(760, 480);
+            this.Name = "ucProducts";
+            this.Load += new System.EventHandler(this.ucProducts_Load);
             this.pnlForm.ResumeLayout(false);
             this.pnlForm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();

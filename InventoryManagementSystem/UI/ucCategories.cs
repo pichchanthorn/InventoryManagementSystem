@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using InventoryManagementSystem.BLL;
@@ -6,20 +6,28 @@ using InventoryManagementSystem.Entity;
 
 namespace InventoryManagementSystem.UI
 {
-    public partial class frmCategories : Form
+    public partial class ucCategories : UserControl
     {
         private readonly CategoryBLL _categoryBLL = new CategoryBLL();
         private int _selectedCategoryId;
+        private bool _suppressSelectionChanged;
 
-        public frmCategories()
+        public ucCategories()
         {
+            Font = Theme.BaseFont;
             InitializeComponent();
+            Theme.Apply(this);
+            Theme.AttachEmptyState(dgvCategories, "No categories found.");
         }
 
-        private void frmCategories_Load(object sender, EventArgs e)
+        private void ucCategories_Load(object sender, EventArgs e)
         {
             LoadCategories();
             ClearForm();
+
+            // A freshly bound DataGridView re-selects its first row once the page is first laid out (after Load),
+            // which would silently put the first record into edit mode. Reset once more after that has happened.
+            BeginInvoke(new Action(ClearForm));
         }
 
         private void LoadCategories()
@@ -61,6 +69,9 @@ namespace InventoryManagementSystem.UI
 
         private void dgvCategories_SelectionChanged(object sender, EventArgs e)
         {
+            if (_suppressSelectionChanged)
+                return;
+
             if (dgvCategories.CurrentRow == null || dgvCategories.CurrentRow.DataBoundItem == null)
                 return;
 
@@ -70,9 +81,17 @@ namespace InventoryManagementSystem.UI
             txtCategoryName.Text = category.CategoryName;
             txtDescription.Text = category.Description;
 
-            btnUpdate.Enabled = true;
-            btnDelete.Enabled = true;
+            SetEditMode(true);
         }
+
+        /// <summary>Add mode: Add enabled, Update/Delete disabled. Edit mode (a row is selected): the reverse.</summary>
+        private void SetEditMode(bool editing)
+        {
+            btnAdd.Enabled = !editing;
+            btnUpdate.Enabled = editing;
+            btnDelete.Enabled = editing;
+        }
+
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -151,12 +170,21 @@ namespace InventoryManagementSystem.UI
 
         private void ClearForm()
         {
-            _selectedCategoryId = 0;
-            txtCategoryName.Clear();
-            txtDescription.Clear();
-            dgvCategories.ClearSelection();
-            btnUpdate.Enabled = false;
-            btnDelete.Enabled = false;
+            _suppressSelectionChanged = true;
+            try
+            {
+                _selectedCategoryId = 0;
+                txtCategoryName.Clear();
+                txtDescription.Clear();
+                dgvCategories.ClearSelection();
+                dgvCategories.CurrentCell = null;
+                SetEditMode(false);
+            }
+            finally
+            {
+                _suppressSelectionChanged = false;
+            }
+
             txtCategoryName.Focus();
         }
     }

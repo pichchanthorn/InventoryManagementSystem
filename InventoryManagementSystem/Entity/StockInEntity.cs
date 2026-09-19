@@ -12,5 +12,15 @@ namespace InventoryManagementSystem.Entity
         public decimal TotalCost { get; set; }
         public DateTime DateIn { get; set; }
         public string Notes { get; set; }
+
+        /// <summary>
+        /// Display-only; populated by a join in StockInDAL.GetAll(). Not a database column.
+        /// </summary>
+        public string ProductName { get; set; }
+
+        /// <summary>
+        /// Display-only; populated by a join in StockInDAL.GetAll(). Not a database column.
+        /// </summary>
+        public string SupplierName { get; set; }
     }
 }

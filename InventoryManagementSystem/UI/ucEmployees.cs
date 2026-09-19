@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using InventoryManagementSystem.BLL;
@@ -6,21 +6,28 @@ using InventoryManagementSystem.Entity;
 
 namespace InventoryManagementSystem.UI
 {
-    public partial class frmEmployees : Form
+    public partial class ucEmployees : UserControl
     {
         private readonly EmployeeBLL _employeeBLL = new EmployeeBLL();
         private int _selectedEmployeeId;
         private bool _suppressSelectionChanged;
 
-        public frmEmployees()
+        public ucEmployees()
         {
+            Font = Theme.BaseFont;
             InitializeComponent();
+            Theme.Apply(this);
+            Theme.AttachEmptyState(dgvEmployees, "No employees found.");
         }
 
-        private void frmEmployees_Load(object sender, EventArgs e)
+        private void ucEmployees_Load(object sender, EventArgs e)
         {
             LoadEmployees();
             ClearForm();
+
+            // A freshly bound DataGridView re-selects its first row once the page is first laid out (after Load),
+            // which would silently put the first record into edit mode. Reset once more after that has happened.
+            BeginInvoke(new Action(ClearForm));
         }
 
         private void LoadEmployees()
@@ -55,9 +62,17 @@ namespace InventoryManagementSystem.UI
             txtEmail.Text = employee.Email;
             txtAddress.Text = employee.Address;
 
-            btnUpdate.Enabled = true;
-            btnDelete.Enabled = true;
+            SetEditMode(true);
         }
+
+        /// <summary>Add mode: Add enabled, Update/Delete disabled. Edit mode (a row is selected): the reverse.</summary>
+        private void SetEditMode(bool editing)
+        {
+            btnAdd.Enabled = !editing;
+            btnUpdate.Enabled = editing;
+            btnDelete.Enabled = editing;
+        }
+
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -151,8 +166,7 @@ namespace InventoryManagementSystem.UI
                 txtAddress.Clear();
                 dgvEmployees.ClearSelection();
                 dgvEmployees.CurrentCell = null;
-                btnUpdate.Enabled = false;
-                btnDelete.Enabled = false;
+                SetEditMode(false);
             }
             finally
             {
