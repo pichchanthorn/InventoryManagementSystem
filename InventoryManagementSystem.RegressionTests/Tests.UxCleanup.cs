@@ -168,7 +168,7 @@ namespace InventoryManagementSystem.RegressionTests
             T.F<TextBox>(main.CurrentPage, "txtQuantity").Text = "10"; T.F<TextBox>(main.CurrentPage, "txtUnitCost").Text = "25.00"; T.Pump();
             T.Eq("O21 Stock In: 10 x 25.00 = 250.00 (plain number, no $ in the field)", "250.00", T.F<TextBox>(main.CurrentPage, "txtTotalCost").Text);
             go("StockOut");
-            T.Eq("O22 Stock Out: labels", "Unit Price (USD):|Total Price (USD):", T.F<Label>(main.CurrentPage, "lblUnitPrice").Text + "|" + T.F<Label>(main.CurrentPage, "lblTotalPrice").Text);
+            T.Eq("O22 Stock Out: labels", "Unit Value (USD):|Total Value (USD):", T.F<Label>(main.CurrentPage, "lblUnitPrice").Text + "|" + T.F<Label>(main.CurrentPage, "lblTotalPrice").Text);
             go("Orders");
             T.Eq("O23 Orders: labels", "Unit Price (USD):|Line Total (USD):|Total Amount (USD):",
                 T.F<Label>(main.CurrentPage, "lblUnitPrice").Text + "|" + T.F<Label>(main.CurrentPage, "lblLineTotal").Text + "|" + T.F<Label>(main.CurrentPage, "lblTotalAmountCaption").Text);

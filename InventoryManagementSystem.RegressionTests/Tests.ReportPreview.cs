@@ -206,7 +206,7 @@ namespace InventoryManagementSystem.RegressionTests
             CheckPrinter("N31 stock out 1 row", dso1, 1);
             T.Eq("N31 stock out row formatting (id|product|customer|qty|price|total|date|notes)",
                 so1.Rows[0].StockOutID + "|ZZREG_ProdA|ZZREG_CustA|2|$4.00|$8.00|2026-03-06 14:05|ZZREG-OUT-UNIQUE", string.Join("|", dso1.Rows[0]));
-            T.Eq("N31 stock out columns", "ID|Product|Customer|Quantity|Unit Price (USD)|Total Price (USD)|Date Out|Notes", string.Join("|", dso1.Columns.Select(c => c.Header)));
+            T.Eq("N31 stock out columns", "ID|Product|Customer|Quantity|Unit Value (USD)|Total Value (USD)|Date Out|Reason / Notes", string.Join("|", dso1.Columns.Select(c => c.Header)));
             T.Eq("N31 stock out is landscape", true, dso1.Landscape);
 
             T.Exec(@"INSERT StockOut(ProductID,CustomerID,Quantity,UnitPrice,TotalPrice,DateOut,Notes)

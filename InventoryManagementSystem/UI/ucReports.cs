@@ -366,10 +366,10 @@ namespace InventoryManagementSystem.UI
                     AddColumn("ProductName", "Product", 180);
                     AddColumn("CustomerName", "Customer", 150);
                     AddColumn("Quantity", "Quantity", 80, null, true);
-                    AddColumn("UnitPrice", "Unit Price (USD)", 140, money, true);
-                    AddColumn("TotalPrice", "Total Price (USD)", 145, money, true);
+                    AddColumn("UnitPrice", "Unit Value (USD)", 140, money, true);
+                    AddColumn("TotalPrice", "Total Value (USD)", 145, money, true);
                     AddColumn("DateOut", "Date Out", 130, dateTime);
-                    AddColumn("Notes", "Notes", 0);
+                    AddColumn("Notes", "Reason / Notes", 0);
                     break;
                 default:
                     AddColumn("OrderID", "Order ID", 80, null, true);

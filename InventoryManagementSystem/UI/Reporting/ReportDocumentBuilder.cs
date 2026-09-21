@@ -72,10 +72,10 @@ namespace InventoryManagementSystem.UI.Reporting
             doc.Columns.Add(new ReportColumn("Product", 22));
             doc.Columns.Add(new ReportColumn("Customer", 18));
             doc.Columns.Add(new ReportColumn("Quantity", 9, ReportAlign.Right));
-            doc.Columns.Add(new ReportColumn("Unit Price (USD)", 14, ReportAlign.Right));
-            doc.Columns.Add(new ReportColumn("Total Price (USD)", 15, ReportAlign.Right));
+            doc.Columns.Add(new ReportColumn("Unit Value (USD)", 14, ReportAlign.Right));
+            doc.Columns.Add(new ReportColumn("Total Value (USD)", 15, ReportAlign.Right));
             doc.Columns.Add(new ReportColumn("Date Out", 14));
-            doc.Columns.Add(new ReportColumn("Notes", 20));
+            doc.Columns.Add(new ReportColumn("Reason / Notes", 20));
 
             foreach (StockOutReportRow r in result.Rows)
                 doc.Rows.Add(new[]
