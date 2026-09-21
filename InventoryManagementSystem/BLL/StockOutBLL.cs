@@ -112,7 +112,7 @@ namespace InventoryManagementSystem.BLL
                 return StockOutResult.Fail("Quantity must be greater than zero.");
 
             if (stockOut.UnitPrice < 0)
-                return StockOutResult.Fail("Unit price cannot be negative.");
+                return StockOutResult.Fail("Unit value cannot be negative.");
 
             if (!string.IsNullOrWhiteSpace(stockOut.Notes) && stockOut.Notes.Trim().Length > MaxNotesLength)
                 return StockOutResult.Fail("Notes cannot exceed " + MaxNotesLength + " characters.");

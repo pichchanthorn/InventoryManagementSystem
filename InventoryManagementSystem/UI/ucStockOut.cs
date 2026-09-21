@@ -241,7 +241,7 @@ namespace InventoryManagementSystem.UI
             decimal unitPrice;
             if (!decimal.TryParse(txtUnitPrice.Text.Trim(), out unitPrice))
             {
-                error = "Unit price must be a valid number.";
+                error = "Unit value must be a valid number.";
                 return false;
             }
 

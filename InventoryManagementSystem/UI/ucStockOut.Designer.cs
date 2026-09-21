@@ -30,6 +30,7 @@ namespace InventoryManagementSystem.UI
         {
             this.pnlForm = new System.Windows.Forms.Panel();
             this.lblHeader = new System.Windows.Forms.Label();
+            this.lblHint = new System.Windows.Forms.Label();
             this.lblProduct = new System.Windows.Forms.Label();
             this.cmbProduct = new System.Windows.Forms.ComboBox();
             this.lblAvailableStock = new System.Windows.Forms.Label();
@@ -77,6 +78,7 @@ namespace InventoryManagementSystem.UI
             // pnlForm
             //
             this.pnlForm.Controls.Add(this.lblHeader);
+            this.pnlForm.Controls.Add(this.lblHint);
             this.pnlForm.Controls.Add(this.lblProduct);
             this.pnlForm.Controls.Add(this.cmbProduct);
             this.pnlForm.Controls.Add(this.lblAvailableStock);
@@ -109,6 +111,16 @@ namespace InventoryManagementSystem.UI
             this.lblHeader.Size = new System.Drawing.Size(105, 25);
             this.lblHeader.TabIndex = 0;
             this.lblHeader.Text = "Stock Out";
+            //
+            // lblHint
+            //
+            this.lblHint.AutoSize = true;
+            this.lblHint.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblHint.Location = new System.Drawing.Point(150, 23);
+            this.lblHint.Name = "lblHint";
+            this.lblHint.Size = new System.Drawing.Size(500, 13);
+            this.lblHint.TabIndex = 15;
+            this.lblHint.Text = "Inventory leaving outside customer orders (damaged, internal use, samples, lost). Customer sales belong in Orders.";
             //
             // lblProduct
             //
@@ -154,7 +166,7 @@ namespace InventoryManagementSystem.UI
             this.lblCustomer.Name = "lblCustomer";
             this.lblCustomer.Size = new System.Drawing.Size(55, 13);
             this.lblCustomer.TabIndex = 5;
-            this.lblCustomer.Text = "Customer:";
+            this.lblCustomer.Text = "Customer (optional):";
             //
             // cmbCustomer
             //
@@ -189,7 +201,7 @@ namespace InventoryManagementSystem.UI
             this.lblUnitPrice.Name = "lblUnitPrice";
             this.lblUnitPrice.Size = new System.Drawing.Size(58, 13);
             this.lblUnitPrice.TabIndex = 9;
-            this.lblUnitPrice.Text = "Unit Price (USD):";
+            this.lblUnitPrice.Text = "Unit Value (USD):";
             //
             // txtUnitPrice
             //
@@ -206,7 +218,7 @@ namespace InventoryManagementSystem.UI
             this.lblTotalPrice.Name = "lblTotalPrice";
             this.lblTotalPrice.Size = new System.Drawing.Size(102, 13);
             this.lblTotalPrice.TabIndex = 11;
-            this.lblTotalPrice.Text = "Total Price (USD):";
+            this.lblTotalPrice.Text = "Total Value (USD):";
             //
             // txtTotalPrice
             //
@@ -224,7 +236,7 @@ namespace InventoryManagementSystem.UI
             this.lblNotes.Name = "lblNotes";
             this.lblNotes.Size = new System.Drawing.Size(40, 13);
             this.lblNotes.TabIndex = 13;
-            this.lblNotes.Text = "Notes:";
+            this.lblNotes.Text = "Reason / Notes:";
             //
             // txtNotes
             //
@@ -461,7 +473,7 @@ namespace InventoryManagementSystem.UI
             dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             dataGridViewCellStyle1.Format = "N2";
             this.colUnitPrice.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colUnitPrice.HeaderText = "Unit Price (USD)";
+            this.colUnitPrice.HeaderText = "Unit Value (USD)";
             this.colUnitPrice.Name = "colUnitPrice";
             this.colUnitPrice.ReadOnly = true;
             this.colUnitPrice.Width = 140;
@@ -472,7 +484,7 @@ namespace InventoryManagementSystem.UI
             dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             dataGridViewCellStyle2.Format = "N2";
             this.colTotalPrice.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colTotalPrice.HeaderText = "Total Price (USD)";
+            this.colTotalPrice.HeaderText = "Total Value (USD)";
             this.colTotalPrice.Name = "colTotalPrice";
             this.colTotalPrice.ReadOnly = true;
             this.colTotalPrice.Width = 145;
@@ -492,7 +504,7 @@ namespace InventoryManagementSystem.UI
             //
             this.colNotes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colNotes.DataPropertyName = "Notes";
-            this.colNotes.HeaderText = "Notes";
+            this.colNotes.HeaderText = "Reason / Notes";
             this.colNotes.Name = "colNotes";
             this.colNotes.ReadOnly = true;
             //
@@ -524,6 +536,7 @@ namespace InventoryManagementSystem.UI
 
         private System.Windows.Forms.Panel pnlForm;
         private System.Windows.Forms.Label lblHeader;
+        private System.Windows.Forms.Label lblHint;
         private System.Windows.Forms.Label lblProduct;
         private System.Windows.Forms.ComboBox cmbProduct;
         private System.Windows.Forms.Label lblAvailableStock;
